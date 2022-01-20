@@ -22,7 +22,7 @@
     "test": "ember test --test-port=0"
   },
   "dependencies": {
-    "ember-auto-import": "^2.2.4",
+    "ember-auto-import": "^2.4.0",
     "ember-data": "4.4.0-alpha.3"
   },
   "devDependencies": {
