@@ -12,7 +12,8 @@ import { DEBUG } from '@glimmer/env';
 import { tracked } from '@glimmer/tracking';
 import Ember from 'ember';
 
-import { HAS_DEBUG_PACKAGE } from '@ember-data/private-build-infra';
+import { dependencySatisfies, macroCondition } from '@embroider/macros';
+
 import { coerceId, errorsArrayToHash, InternalModel, PromiseObject, recordDataFor } from '@ember-data/store/-private';
 
 import Errors from './errors';
@@ -1931,7 +1932,7 @@ Model.prototype._internalModel = null;
 Model.prototype.store = null;
 Model.prototype._createProps = null;
 
-if (HAS_DEBUG_PACKAGE) {
+if (macroCondition(dependencySatisfies('@ember-data/debug', '*'))) {
   /**
    Provides info about the model for debugging purposes
    by grouping the properties into more semantic groups.

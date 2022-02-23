@@ -13,10 +13,9 @@ import { isNone, isPresent, typeOf } from '@ember/utils';
 import { DEBUG } from '@glimmer/env';
 import Ember from 'ember';
 
-import { importSync } from '@embroider/macros';
+import { dependencySatisfies, importSync, macroCondition } from '@embroider/macros';
 import { all, default as RSVP, Promise, resolve } from 'rsvp';
 
-import { HAS_RECORD_DATA_PACKAGE } from '@ember-data/private-build-infra';
 import type {
   BelongsToRelationship,
   ManyRelationship,
@@ -1517,7 +1516,7 @@ abstract class CoreStore extends Service {
     relationship: ManyRelationship | BelongsToRelationship,
     options: any
   ): RSVP.Promise<unknown> {
-    if (HAS_RECORD_DATA_PACKAGE) {
+    if (macroCondition(dependencySatisfies('@ember-data/record-data', '*'))) {
       if (!resource) {
         return resolve([]);
       }
@@ -2901,7 +2900,7 @@ abstract class CoreStore extends Service {
     clientId: string,
     storeWrapper: RecordDataStoreWrapper
   ): RecordData {
-    if (HAS_RECORD_DATA_PACKAGE) {
+    if (macroCondition(dependencySatisfies('@ember-data/record-data', '*'))) {
       // we can't greedily use require as this causes
       // a cycle we can't easily fix (or clearly pin point) at present.
       //
@@ -3156,7 +3155,7 @@ abstract class CoreStore extends Service {
       }
     }
 
-    if (HAS_RECORD_DATA_PACKAGE) {
+    if (macroCondition(dependencySatisfies('@ember-data/record-data', '*'))) {
       const peekGraph = (
         importSync('@ember-data/record-data/-private') as typeof import('@ember-data/record-data/-private')
       ).peekGraph;
@@ -3178,7 +3177,7 @@ abstract class CoreStore extends Service {
     // destroy the graph before unloadAll
     // since then we avoid churning relationships
     // during unload
-    if (HAS_RECORD_DATA_PACKAGE) {
+    if (macroCondition(dependencySatisfies('@ember-data/record-data', '*'))) {
       const peekGraph = (
         importSync('@ember-data/record-data/-private') as typeof import('@ember-data/record-data/-private')
       ).peekGraph;

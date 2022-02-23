@@ -1,10 +1,9 @@
 import { getOwner } from '@ember/application';
 import { get } from '@ember/object';
 
-import { importSync } from '@embroider/macros';
+import { dependencySatisfies, importSync, macroCondition } from '@embroider/macros';
 
 import type Model from '@ember-data/model';
-import { HAS_MODEL_PACKAGE } from '@ember-data/private-build-infra';
 
 import type { RecordIdentifier } from '../ts-interfaces/identifier';
 import type { AttributesSchema, RelationshipsSchema } from '../ts-interfaces/record-data-schemas';
@@ -14,7 +13,7 @@ import normalizeModelName from './normalize-model-name';
 type ModelForMixin = (store: Store, normalizedModelName: string) => Model | null;
 
 let _modelForMixin: ModelForMixin;
-if (HAS_MODEL_PACKAGE) {
+if (macroCondition(dependencySatisfies('@ember-data/model', '*'))) {
   let _found;
   _modelForMixin = function () {
     if (!_found) {
@@ -88,7 +87,7 @@ export function getModelFactory(store: Store, cache, normalizedModelName: string
   if (!factory) {
     factory = _lookupModelFactory(store, normalizedModelName);
 
-    if (!factory && HAS_MODEL_PACKAGE) {
+    if (!factory && dependencySatisfies('@ember-data/model', '*')) {
       //Support looking up mixins as base types for polymorphic relationships
       factory = _modelForMixin(store, normalizedModelName);
     }
