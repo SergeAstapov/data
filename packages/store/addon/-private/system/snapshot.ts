@@ -4,9 +4,8 @@
 import { assert } from '@ember/debug';
 import { get } from '@ember/object';
 
-import { importSync } from '@embroider/macros';
+import { dependencySatisfies, importSync } from '@embroider/macros';
 
-import { HAS_RECORD_DATA_PACKAGE } from '@ember-data/private-build-infra';
 import type BelongsToRelationship from '@ember-data/record-data/addon/-private/relationships/state/belongs-to';
 import type ManyRelationship from '@ember-data/record-data/addon/-private/relationships/state/has-many';
 import type {
@@ -326,7 +325,7 @@ export default class Snapshot implements Snapshot {
     // function without access to intimate API contracts between RecordData and InternalModel.
     // This is a requirement we should fix as soon as the relationship layer does not require
     // this intimate API usage.
-    if (!HAS_RECORD_DATA_PACKAGE) {
+    if (!dependencySatisfies('@ember-data/record-data', '*')) {
       assert(`snapshot.belongsTo only supported when using the package @ember-data/record-data`);
     }
 
@@ -427,7 +426,7 @@ export default class Snapshot implements Snapshot {
     // function without access to intimate API contracts between RecordData and InternalModel.
     // This is a requirement we should fix as soon as the relationship layer does not require
     // this intimate API usage.
-    if (!HAS_RECORD_DATA_PACKAGE) {
+    if (!dependencySatisfies('@ember-data/record-data', '*')) {
       assert(`snapshot.hasMany only supported when using the package @ember-data/record-data`);
     }
 

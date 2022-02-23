@@ -1,7 +1,6 @@
-import { importSync } from '@embroider/macros';
+import { dependencySatisfies, importSync, macroCondition } from '@embroider/macros';
 
 import type { RelationshipDefinition } from '@ember-data/model/-private/system/relationships/relationship-meta';
-import { HAS_RECORD_DATA_PACKAGE } from '@ember-data/private-build-infra';
 
 import type { IdentifierCache } from '../../identifiers/cache';
 import type { StableRecordIdentifier } from '../../ts-interfaces/identifier';
@@ -25,7 +24,7 @@ function metaIsRelationshipDefinition(meta: RelationshipSchema): meta is Relatio
 }
 
 let peekGraph;
-if (HAS_RECORD_DATA_PACKAGE) {
+if (macroCondition(dependencySatisfies('@ember-data/record-data', '*'))) {
   let _peekGraph;
   peekGraph = (wrapper) => {
     _peekGraph =
@@ -233,7 +232,7 @@ export default class RecordDataStoreWrapper implements StoreWrapper {
   disconnectRecord(type: string, id: string | null, lid?: string | null): void {
     const resource = constructResource(type, id, lid);
     const identifier = this.identifierCache.getOrCreateRecordIdentifier(resource);
-    if (HAS_RECORD_DATA_PACKAGE) {
+    if (macroCondition(dependencySatisfies('@ember-data/record-data', '*'))) {
       let graph = peekGraph(this);
       if (graph) {
         graph.remove(identifier);
