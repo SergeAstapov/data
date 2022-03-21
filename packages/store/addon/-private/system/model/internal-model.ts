@@ -5,10 +5,9 @@ import { get } from '@ember/object';
 import { _backburner as emberBackburner, cancel, run } from '@ember/runloop';
 import { DEBUG } from '@glimmer/env';
 
-import { importSync } from '@embroider/macros';
+import { dependencySatisfies, importSync, macroCondition } from '@embroider/macros';
 import RSVP, { Promise } from 'rsvp';
 
-import { HAS_MODEL_PACKAGE, HAS_RECORD_DATA_PACKAGE } from '@ember-data/private-build-infra';
 import type {
   BelongsToRelationship,
   ManyRelationship,
@@ -49,7 +48,7 @@ let _PromiseManyArray: any; // TODO find a way to get the klass type here
 
 let _found = false;
 let _getModelPackage: () => boolean;
-if (HAS_MODEL_PACKAGE) {
+if (macroCondition(dependencySatisfies('@ember-data/model', '*'))) {
   _getModelPackage = function () {
     if (!_found) {
       let modelPackage = importSync('@ember-data/model/-private') as typeof import('@ember-data/model/-private');
@@ -123,7 +122,7 @@ export default class InternalModel {
   declare _previousState: any;
 
   constructor(public store: CoreStore | Store, public identifier: StableRecordIdentifier) {
-    if (HAS_MODEL_PACKAGE) {
+    if (macroCondition(dependencySatisfies('@ember-data/model', '*'))) {
       _getModelPackage();
     }
     this._id = identifier.id;
@@ -488,7 +487,7 @@ export default class InternalModel {
   }
 
   getManyArray(key: string, definition?: UpgradedMeta) {
-    if (HAS_RECORD_DATA_PACKAGE) {
+    if (macroCondition(dependencySatisfies('@ember-data/record-data', '*'))) {
       let manyArray = this._manyArrayCache[key];
       if (!definition) {
         const graphFor = (
@@ -523,7 +522,7 @@ export default class InternalModel {
     manyArray,
     options
   ): RSVP.Promise<unknown> {
-    if (HAS_RECORD_DATA_PACKAGE) {
+    if (macroCondition(dependencySatisfies('@ember-data/record-data', '*'))) {
       let loadingPromise = this._relationshipPromisesCache[key];
       if (loadingPromise) {
         return loadingPromise;
@@ -542,7 +541,7 @@ export default class InternalModel {
   }
 
   getHasMany(key: string, options?) {
-    if (HAS_RECORD_DATA_PACKAGE) {
+    if (macroCondition(dependencySatisfies('@ember-data/record-data', '*'))) {
       const graphFor = (
         importSync('@ember-data/record-data/-private') as typeof import('@ember-data/record-data/-private')
       ).graphFor;
@@ -604,7 +603,7 @@ export default class InternalModel {
   }
 
   reloadHasMany(key, options) {
-    if (HAS_RECORD_DATA_PACKAGE) {
+    if (macroCondition(dependencySatisfies('@ember-data/record-data', '*'))) {
       let loadingPromise = this._relationshipPromisesCache[key];
       if (loadingPromise) {
         return loadingPromise;
@@ -1118,7 +1117,7 @@ export default class InternalModel {
     let reference = this.references[name];
 
     if (!reference) {
-      if (!HAS_RECORD_DATA_PACKAGE) {
+      if (!dependencySatisfies('@ember-data/record-data', '*')) {
         // TODO @runspired while this feels odd, it is not a regression in capability because we do
         // not today support references pulling from RecordDatas other than our own
         // because of the intimate API access involved. This is something we will need to redesign.

@@ -30,6 +30,8 @@ module.exports = Object.assign({}, addonBaseConfig, {
       '@ember/runloop',
       '@ember/utils',
 
+      '@embroider/macros/runtime',
+
       '@glimmer/tracking/primitives/cache',
       '@glimmer/tracking',
       'ember-inflector',
