@@ -2,6 +2,7 @@
   @module @ember-data/store
  */
 import { getOwner } from '@ember/application';
+import type ApplicationInstance from '@ember/application/instance';
 import { A } from '@ember/array';
 import { assert, inspect, warn } from '@ember/debug';
 import { set } from '@ember/object';
@@ -3042,7 +3043,7 @@ abstract class CoreStore extends Service {
       return adapter;
     }
 
-    let owner = getOwner(this);
+    let owner = getOwner(this) as ApplicationInstance;
 
     // name specific adapter
     adapter = owner.lookup(`adapter:${normalizedModelName}`);
@@ -3113,7 +3114,7 @@ abstract class CoreStore extends Service {
       return serializer;
     }
 
-    let owner = getOwner(this);
+    let owner = getOwner(this) as ApplicationInstance;
 
     // by name
     serializer = owner.lookup(`serializer:${normalizedModelName}`);

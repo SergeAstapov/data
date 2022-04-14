@@ -1,4 +1,5 @@
 import { getOwner } from '@ember/application';
+import type ApplicationInstance from '@ember/application/instance';
 import { get } from '@ember/object';
 
 import require from 'require';
@@ -114,7 +115,7 @@ export function getModelFactory(store: Store, cache, normalizedModelName: string
 }
 
 export function _lookupModelFactory(store: Store, normalizedModelName: string): Model | null {
-  let owner = getOwner(store);
+  let owner = getOwner(store) as ApplicationInstance;
 
   return owner.factoryFor(`model:${normalizedModelName}`);
 }

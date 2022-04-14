@@ -2,6 +2,7 @@
   @module @ember-data/adapter/rest
 */
 import { getOwner } from '@ember/application';
+import type ApplicationInstance from '@ember/application/instance';
 import { assert, warn } from '@ember/debug';
 import { computed } from '@ember/object';
 import { join } from '@ember/runloop';
@@ -355,7 +356,8 @@ class RESTAdapter extends Adapter.extend(BuildURLMixin) {
     if (fastboot) {
       return fastboot;
     }
-    return (this._fastboot = getOwner(this).lookup('service:fastboot'));
+    const owner = getOwner(this) as ApplicationInstance;
+    return (this._fastboot = owner.lookup('service:fastboot') as FastBoot);
   }
 
   set fastboot(value: FastBoot) {

@@ -28,7 +28,7 @@ module('integration/request-state-service - Request State Service', function (ho
     let { owner } = this;
     owner.register('model:person', Person);
     owner.register('serializer:application', JSONSerializer);
-    store = owner.lookup('service:store');
+    store = <Store>owner.lookup('service:store');
   });
 
   test('getPendingRequest and getLastRequest return correct inflight and fulfilled requests', async function (assert) {
@@ -73,8 +73,6 @@ module('integration/request-state-service - Request State Service', function (ho
     });
 
     owner.register('adapter:application', TestAdapter);
-
-    store = owner.lookup('service:store');
 
     let promise = store.findRecord('person', '1');
     let requestService = store.getRequestStateService();
@@ -169,8 +167,6 @@ module('integration/request-state-service - Request State Service', function (ho
     });
 
     owner.register('adapter:application', TestAdapter, { singleton: false });
-
-    store = owner.lookup('service:store');
 
     let requestService = store.getRequestStateService();
     // Relying on sequential lids until identifiers land
